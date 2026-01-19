@@ -28,8 +28,8 @@
                 <li><a href="https://alexxanorafa.github.io/ANIMA-II/" class="menu-item">ANIMA II</a></li>
                 <li><a href="https://alexxanorafa.github.io/Animais-de-Poder/" class="menu-item">Animais de Poder</a></li>
                 <li><a href="https://alexxanorafa.github.io/Arvore-da-Vida/" class="menu-item">Árvore da Vida</a></li>
-                <li><a href="https://alexxanorafa.github.io/Biblioteca-Onirica/" class="menu-item">Biblioteca Onirica</a></li>
-                <li><a href="https://alexxanorafa.github.io/Buzios/" class="menu-item">Buzios</a></li>
+                <li><a href="https://alexxanorafa.github.io/Biblioteca-Onirica/" class="menu-item">Biblioteca Onírica</a></li>
+                <li><a href="https://alexxanorafa.github.io/Buzios/" class="menu-item">Búzios</a></li>
                 <li><a href="https://alexxanorafa.github.io/Cartas-de-Sibila/" class="menu-item">Cartas de Sibila</a></li>
                 <li><a href="https://alexxanorafa.github.io/Do-you-love-me/" class="menu-item">Do you love me?</a></li>
                 <li><a href="https://alexxanorafa.github.io/I-Ching-Virtual/" class="menu-item">I Ching Virtual</a></li>
@@ -43,12 +43,12 @@
                 <li><a href="https://alexxanorafa.github.io/Oraculo-das-Pedras/" class="menu-item">Oráculo das Pedras</a></li>
                 <li><a href="https://alexxanorafa.github.io/Oraculo-dos-Deuses/" class="menu-item">Oráculo dos Deuses</a></li>
                 <li><a href="https://alexxanorafa.github.io/Oraculo-Numerologico/" class="menu-item">Oráculo Numerológico</a></li>
-                <li><a href="https://alexxanorafa.github.io/Pendulo-Divinatorio/" class="menu-item">Pendulo Divinatorio</a></li>
+                <li><a href="https://alexxanorafa.github.io/Pendulo-Divinatorio/" class="menu-item">Pêndulo Divinatório</a></li>
                 <li><a href="https://alexxanorafa.github.io/Portal-das-Almas/" class="menu-item">Portal das Almas</a></li>
                 <li><a href="https://alexxanorafa.github.io/Runas-Celtas/" class="menu-item">Runas Celtas</a></li>
                 <li><a href="https://alexxanorafa.github.io/Runas-Estelares/" class="menu-item">Runas Estelares</a></li>
                 <li><a href="https://alexxanorafa.github.io/Runas-do-Destino/" class="menu-item">Runas Nórdicas</a></li>
-                <li><a href="https://alexxanorafa.github.io/Tabuleiro-Quantico/" class="menu-item">Tabuleiro Quantico</a></li>
+                <li><a href="https://alexxanorafa.github.io/Tabuleiro-Quantico/" class="menu-item">Tabuleiro Quântico</a></li>
                 <li><a href="https://alexxanorafa.github.io/TarodeMarselha/" class="menu-item">Tarô de Marselha</a></li>
                 <li><a href="https://alexxanorafa.github.io/Tasseografia/" class="menu-item">Tasseografia</a></li>
                 <li><a href="https://alexxanorafa.github.io/Tempo_e_Sonhos/" class="menu-item">Tempo e Sonhos</a></li>
@@ -69,17 +69,18 @@
 
             <div id="artifact-container" class="hidden">
                 <div class="artifact-card">
-                    <div id="sacred-geometry">
-                        <canvas id="artifact-canvas" width="200" height="200"></canvas>
-                    </div>
+                    <canvas id="artifact-canvas" width="200" height="200"></canvas>
                     <div class="artifact-content">
                         <div id="god-header" class="meta-info"></div>
                         <h2 id="god-name"></h2>
-                        <div class="scroll-box">
-                            <p id="god-msg-long"></p>
+                        <div class="scroll-box custom-scroll">
+                            <p id="god-msg"></p>
                         </div>
                         <div id="god-shadow" class="shadow-box"></div>
-                        <button onclick="resetAether()">REINICIAR SINGULARIDADE</button>
+                        <div class="action-bar">
+                            <button class="btn-continue" onclick="continueExploration()">CONTINUAR EXPLORAÇÃO</button>
+                            <button class="btn-reset" onclick="resetAether()">REINICIAR TUDO</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -87,8 +88,7 @@
 
         <footer>
             <div class="control-group">
-                <label>FREQUÊNCIA DE ORIGEM</label>
-                <select id="panteao-selector" onchange="switchFrequency()">
+                <select id="panteao-selector">
                     <option value="grego">432Hz (OLIMPO)</option>
                     <option value="egipcio">528Hz (EGITO)</option>
                     <option value="nordico">639Hz (NÓRDICO)</option>
@@ -96,7 +96,6 @@
             </div>
         </footer>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>

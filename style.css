@@ -1,279 +1,87 @@
-/* ============ VARIÁVEIS E BASE ============ */
 :root {
     --void: #030305;
     --light: #e0e6ed;
-    --accent: #ff2a6d; /* Glitch Pink */
-    --energy: #05d9e8; /* Cyan Energy */
-    --glass: rgba(10, 10, 15, 0.85);
+    --energy: #05d9e8;
+    --accent: #ff2a6d;
+    --glass: rgba(10, 10, 15, 0.95);
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+/* Custom Scrollbar - A beleza que foi restaurada */
+.custom-scroll::-webkit-scrollbar, 
+.menu-list::-webkit-scrollbar { width: 4px; }
+.custom-scroll::-webkit-scrollbar-track, 
+.menu-list::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
+.custom-scroll::-webkit-scrollbar-thumb, 
+.menu-list::-webkit-scrollbar-thumb { background: var(--energy); box-shadow: 0 0 10px var(--energy); }
 
 body {
-    margin: 0;
-    height: 100vh;
-    width: 100vw;
-    overflow: hidden;
-    background: var(--void);
-    font-family: 'Space Grotesk', sans-serif;
-    color: var(--light);
-    cursor: crosshair;
-    touch-action: none; /* Crucial para o funcionamento do motor quântico no toque */
+    background: var(--void); color: var(--light);
+    font-family: 'Space Grotesk', sans-serif; height: 100vh;
+    overflow: hidden; touch-action: none; cursor: crosshair;
 }
 
-/* ============ MOTOR VISUAL (BACKGROUND) ============ */
-#quantum-field {
-    position: fixed;
-    top: 0; left: 0;
-    z-index: 0;
-    filter: contrast(150%) brightness(120%);
-}
+#quantum-field { position: fixed; inset: 0; z-index: 0; filter: contrast(140%) brightness(110%); }
 
-/* ============ CAMADA DE INTERFACE ============ */
 .interface-layer {
-    position: relative;
-    z-index: 10;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 20px;
-    pointer-events: none; /* Permite clicar no canvas através da layer */
+    position: relative; z-index: 10; height: 100%;
+    display: flex; flex-direction: column; justify-content: space-between;
+    padding: 25px; pointer-events: none;
 }
 
-/* Reativar cliques apenas onde necessário */
-header, footer, .central-node, #artifact-container, .side-menu, select, button {
-    pointer-events: auto;
-}
+header, footer, .side-menu, .artifact-card, select, button { pointer-events: auto; }
 
-/* ============ HEADER & BRANDING ============ */
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    text-transform: uppercase;
-    letter-spacing: 4px;
-    font-family: 'Syncopate', sans-serif;
-}
+header { display: flex; justify-content: space-between; align-items: center; }
+.brand { font-family: 'Syncopate'; font-weight: 700; letter-spacing: 3px; }
+.brand span { color: var(--energy); font-size: 0.8rem; }
 
-.brand {
-    font-size: 1.2rem;
-    font-weight: 700;
-}
+.menu-trigger { cursor: pointer; display: flex; flex-direction: column; gap: 6px; z-index: 2000; padding: 10px; }
+.menu-trigger span { width: 25px; height: 2px; background: var(--energy); transition: 0.3s; }
 
-.brand span {
-    color: var(--energy);
-    font-size: 0.8rem;
-    margin-left: 5px;
-}
-
-/* Ícone do Menu (Hambúrguer) */
-.menu-trigger {
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    z-index: 2000;
-}
-
-.menu-trigger span {
-    display: block;
-    width: 25px;
-    height: 2px;
-    background: var(--energy);
-    transition: 0.3s;
-}
-
-/* ============ MENU LATERAL (ECOSSISTEMA) ============ */
 .side-menu {
-    position: fixed;
-    top: 0; right: 0;
-    width: 80%;
-    max-width: 320px;
-    height: 100vh;
-    background: var(--glass);
-    backdrop-filter: blur(20px);
-    border-left: 1px solid rgba(5, 217, 232, 0.3);
-    z-index: 1500;
-    transform: translateX(100%);
-    transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    display: flex;
-    flex-direction: column;
+    position: fixed; top: 0; right: 0; width: 300px; height: 100vh;
+    background: var(--glass); backdrop-filter: blur(20px);
+    border-left: 1px solid var(--energy); transform: translateX(100%);
+    transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); z-index: 1500;
 }
+.side-menu.active { transform: translateX(0); }
+.menu-header { padding: 30px 20px 10px; font-family: 'Syncopate'; font-size: 0.7rem; color: var(--accent); }
+.menu-list { padding: 10px 20px; list-style: none; overflow-y: auto; height: calc(100% - 80px); }
+.menu-item { display: block; padding: 12px 0; color: var(--light); text-decoration: none; border-bottom: 1px solid #222; font-size: 0.85rem; }
 
-.side-menu.active {
-    transform: translateX(0);
-}
-
-.menu-header {
-    padding: 30px 20px 10px;
-    font-family: 'Syncopate';
-    font-size: 0.7rem;
-    color: var(--accent);
-    letter-spacing: 2px;
-}
-
-.menu-list {
-    flex: 1;
-    overflow-y: auto;
-    padding: 20px;
-    list-style: none;
-}
-
-.menu-item {
-    display: block;
-    padding: 12px 0;
-    color: var(--light);
-    text-decoration: none;
-    font-size: 0.9rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    transition: 0.3s;
-}
-
-.menu-item:hover {
-    color: var(--energy);
-    padding-left: 10px;
-}
-
-/* ============ NÓ CENTRAL (GAMEPLAY) ============ */
-.central-node {
-    align-self: center;
-    text-align: center;
-    mix-blend-mode: difference;
-}
-
-.status-readout {
-    font-family: 'Syncopate';
-    font-size: 0.6rem;
-    letter-spacing: 2px;
-    color: var(--energy);
-}
-
-.instruction {
-    font-size: 0.7rem;
-    opacity: 0.7;
-    margin-top: 15px;
-    letter-spacing: 2px;
-    animation: pulse 3s infinite;
-}
-
-/* ============ O ARTEFATO (RESULTADO DO ORÁCULO) ============ */
 #artifact-container {
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    background: var(--glass);
-    backdrop-filter: blur(25px);
-    border: 1px solid rgba(5, 217, 232, 0.2);
-    padding: 30px;
-    width: 90%;
-    max-width: 450px;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-    box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
-    opacity: 0;
-    transition: 0.8s ease;
-    visibility: hidden;
+    position: fixed; inset: 0; background: rgba(0,0,0,0.92);
+    display: flex; align-items: center; justify-content: center; z-index: 500;
+    opacity: 0; visibility: hidden; transition: 0.5s;
+}
+#artifact-container.visible { opacity: 1; visibility: visible; }
+
+.artifact-card {
+    background: #0a0a0f; border: 1px solid var(--energy);
+    padding: 25px; width: 95%; max-width: 500px; text-align: center;
 }
 
-#artifact-container.visible {
-    opacity: 1;
-    visibility: visible;
+.scroll-box { max-height: 180px; overflow-y: auto; margin: 15px 0; padding: 10px; border-top: 1px solid #1a1a1a; text-align: justify; }
+
+.shadow-box {
+    background: rgba(255, 42, 109, 0.05); border: 1px dashed var(--accent);
+    padding: 12px; margin-bottom: 20px; font-size: 0.85rem; color: var(--accent); text-align: left;
 }
 
-#artifact-container.hidden {
-    display: none;
-}
+.action-bar { display: flex; gap: 10px; justify-content: center; margin-top: 10px; }
 
-#artifact-canvas {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    border: 1px solid var(--energy);
-    box-shadow: 0 0 20px rgba(5, 217, 232, 0.4);
-}
-
-.artifact-data h2 {
-    font-family: 'Syncopate';
-    color: var(--energy);
-    font-size: 1.5rem;
-    margin-bottom: 10px;
-    letter-spacing: 3px;
-}
-
-.scroll-msg {
-    max-height: 180px;
-    overflow-y: auto;
-    padding: 0 10px;
-    margin-bottom: 20px;
-    scrollbar-width: thin;
-    scrollbar-color: var(--energy) transparent;
-}
-
-.scroll-msg p {
-    font-size: 0.95rem;
-    line-height: 1.6;
-    color: var(--light);
-    text-align: justify;
-}
-
-/* ============ BOTÕES E SELETORES ============ */
 button {
-    background: transparent;
-    border: 1px solid var(--energy);
-    color: var(--energy);
-    padding: 12px 30px;
-    font-family: 'Space Grotesk';
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    cursor: pointer;
-    transition: 0.3s;
-    font-size: 0.8rem;
+    background: transparent; border: 1px solid var(--energy); color: var(--energy);
+    padding: 10px 15px; cursor: pointer; text-transform: uppercase;
+    font-family: 'Space Grotesk'; font-size: 0.75rem; transition: 0.3s;
 }
+button:hover { background: var(--energy); color: var(--void); }
+.btn-reset { border-color: var(--accent); color: var(--accent); }
+.btn-reset:hover { background: var(--accent); color: var(--light); }
 
-button:hover {
-    background: var(--energy);
-    color: var(--void);
-    box-shadow: 0 0 20px var(--energy);
-}
+.status-readout { font-family: 'Syncopate'; color: var(--energy); }
+footer { display: flex; justify-content: center; padding-bottom: 30px; }
+select { background: var(--void); border: 1px solid var(--energy); color: var(--energy); padding: 10px; }
 
-footer {
-    display: flex;
-    justify-content: center;
-    padding-bottom: 10px;
-}
-
-select {
-    background: var(--void);
-    border: 1px solid rgba(5, 217, 232, 0.3);
-    color: var(--energy);
-    padding: 8px 15px;
-    font-family: 'Space Grotesk';
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    outline: none;
-    cursor: pointer;
-}
-
-/* ============ ANIMAÇÕES ============ */
-@keyframes pulse {
-    0%, 100% { opacity: 0.4; transform: scale(0.98); }
-    50% { opacity: 1; transform: scale(1); }
-}
-
-/* Ajustes para ecrãs muito pequenos */
-@media (max-height: 600px) {
-    .artifact-card { padding: 15px; }
-    #artifact-canvas { width: 80px; height: 80px; }
-    .scroll-msg { max-height: 120px; }
-}
+.hidden { display: none !important; }
