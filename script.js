@@ -1,5 +1,5 @@
 /**
- * PROJECT AETHER | MOTOR DE EXPERIÊNCIA ABSOLUTO
+ * PROJECT AETHER | MOTOR DE EXPERIÊNCIA 2026
  */
 
 const codex = {
@@ -34,65 +34,120 @@ const codex = {
     ]
 };
 
-const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-function playPulse(f, type = 'sine', vol = 0.1, dur = 1.5) {
-    if (audioCtx.state === 'suspended') audioCtx.resume();
-    const osc = audioCtx.createOscillator();
-    const g = audioCtx.createGain();
-    osc.type = type;
-    osc.frequency.setValueAtTime(f, audioCtx.currentTime);
-    g.gain.setValueAtTime(0, audioCtx.currentTime);
-    g.gain.linearRampToValueAtTime(vol, audioCtx.currentTime + 0.1);
-    g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
-    osc.connect(g); g.connect(audioCtx.destination);
-    osc.start(); osc.stop(audioCtx.currentTime + dur);
-}
+// 1. MOTOR DE ÁUDIO RECONSTRUÍDO
+const AudioEngine = {
+    ctx: null,
+    init() { if(!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); },
+    playPulse(freq, type = 'sine', vol = 0.1, dur = 1) {
+        this.init();
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+        gain.gain.setValueAtTime(0, this.ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(vol, this.ctx.currentTime + 0.1);
+        gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + dur);
+        osc.connect(gain); gain.connect(this.ctx.destination);
+        osc.start(); osc.stop(this.ctx.currentTime + dur);
+    }
+};
 
+// 2. ESTADO DA SESSÃO
+let unlocked = { grego: [], egipcio: [], nordico: [] };
+let active = true, entropy = 0, pts = [], px = -100, py = -100;
 const canvas = document.getElementById('quantum-field');
 const ctx = canvas.getContext('2d');
-let pts = [], entropy = 0, active = true, px = -100, py = -100;
 
 function init() {
-    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
     pts = Array.from({length: 120}, () => ({
         x: Math.random()*canvas.width, y: Math.random()*canvas.height,
-        vx: 0, vy: 0, c: Math.random() > 0.5 ? '#05d9e8' : '#ff2a6d'
+        vx: (Math.random()-0.5)*0.5, vy: (Math.random()-0.5)*0.5,
+        c: Math.random() > 0.5 ? '#05d9e8' : '#ff2a6d'
     }));
+    initPanteao();
+}
+
+function initPanteao() {
+    const p = document.getElementById('panteao-selector').value;
+    const list = document.getElementById('achievements-list');
+    list.innerHTML = '';
+    
+    codex[p].forEach((god, i) => {
+        const item = document.createElement('div');
+        const isUnlocked = unlocked[p].includes(i);
+        item.className = `achievement-item ${isUnlocked ? 'unlocked' : ''}`;
+        item.innerText = isUnlocked ? god.nome : '[ BLOQUEADO ]';
+        list.appendChild(item);
+    });
+    
+    document.getElementById('collection-count').innerText = `${unlocked[p].length} / ${codex[p].length}`;
+    entropy = 0;
 }
 
 function draw() {
     if (!active) return;
-    ctx.fillStyle = 'rgba(3,3,5,0.15)'; ctx.fillRect(0,0,canvas.width,canvas.height);
-    entropy *= 0.992; // Entropia desce mais devagar para permitir continuidade
+    ctx.fillStyle = 'rgba(2,2,4,0.15)'; ctx.fillRect(0,0,canvas.width,canvas.height);
+    entropy *= 0.992;
     document.getElementById('entropy-val').innerText = Math.min(entropy, 100).toFixed(2) + '%';
+    
     pts.forEach(p => {
         let dx = px - p.x, dy = py - p.y, d = Math.sqrt(dx*dx+dy*dy);
         if (d < 150) { 
-            p.vx += dx*0.002; p.vy += dy*0.002; entropy += 0.08;
-            if(Math.random() > 0.985) playPulse(200 + entropy, 'sine', 0.02, 0.4);
+            p.vx += dx*0.002; p.vy += dy*0.002; entropy += 0.15;
+            if(Math.random() > 0.98) AudioEngine.playPulse(200 + entropy, 'sine', 0.02, 0.3);
         }
-        p.x += p.vx; p.y += p.vy; p.vx *= 0.95; p.vy *= 0.95;
-        ctx.fillStyle = p.c; ctx.fillRect(p.x, p.y, 2, 2);
+        p.x += p.vx; p.y += p.vy; p.vx *= 0.98; p.vy *= 0.98;
+        ctx.fillStyle = p.c; ctx.fillRect(p.x, p.y, 1.5, 1.5);
     });
+    
     if (entropy > 100) reveal(); else requestAnimationFrame(draw);
 }
 
 function reveal() {
     active = false;
-    playPulse(55, 'sawtooth', 0.15, 3);
-    const p = document.getElementById('panteao-selector').value;
-    const choice = codex[p][Math.floor(Math.random()*codex[p].length)];
+    AudioEngine.playPulse(60, 'sawtooth', 0.15, 2);
     
+    const p = document.getElementById('panteao-selector').value;
+    const pool = codex[p];
+    
+    let available = pool.map((_, i) => i).filter(i => !unlocked[p].includes(i));
+    
+    if (available.length === 0) {
+        unlocked[p] = [];
+        available = pool.map((_, i) => i);
+    }
+    
+    const idx = available[Math.floor(Math.random() * available.length)];
+    const god = pool[idx];
+    unlocked[p].push(idx);
+    
+    initPanteao(); 
+
     document.getElementById('main-ui').classList.add('hidden');
     const container = document.getElementById('artifact-container');
     container.classList.remove('hidden');
     setTimeout(() => container.classList.add('visible'), 50);
 
-    document.getElementById('god-header').innerText = `${choice.arq} | ${choice.dom}`;
-    document.getElementById('god-name').innerText = choice.nome;
-    document.getElementById('god-msg').innerText = choice.msg;
-    document.getElementById('god-shadow').innerHTML = `<strong>SOMBRA:</strong> ${choice.sombra}`;
-    drawSacred(document.getElementById('artifact-canvas'));
+    document.getElementById('god-header').innerText = `${god.arq} // ${god.dom}`;
+    document.getElementById('god-name').innerText = god.nome;
+    document.getElementById('god-msg').innerText = god.msg;
+    document.getElementById('god-shadow').innerHTML = `<strong>SOMBRA:</strong> ${god.sombra}`;
+    
+    drawSacred();
+}
+
+function drawSacred() {
+    const c = document.getElementById('artifact-canvas').getContext('2d');
+    c.setTransform(1,0,0,1,0,0);
+    c.clearRect(0,0,200,200); c.strokeStyle = '#05d9e8'; c.lineWidth = 0.5;
+    c.translate(100,100);
+    for(let i=0; i<12; i++) {
+        c.rotate(Math.PI/6);
+        c.strokeRect(-40,-40,80,80);
+        c.beginPath(); c.arc(0,0, i*4, 0, Math.PI*2); c.stroke();
+    }
 }
 
 function continueExploration() {
@@ -101,22 +156,14 @@ function continueExploration() {
     setTimeout(() => {
         container.classList.add('hidden');
         document.getElementById('main-ui').classList.remove('hidden');
-        entropy = 50; // Começa a meio caminho da próxima revelação
-        active = true;
-        draw();
+        entropy = 30; active = true; draw();
     }, 500);
 }
 
-function drawSacred(cvs) {
-    const c = cvs.getContext('2d');
-    c.clearRect(0,0,200,200); c.strokeStyle = '#05d9e8'; c.translate(100,100);
-    for(let i=0; i<10; i++) { c.rotate(Math.PI/5); c.strokeRect(-40,-40,80,80); }
-}
-
-function resetAether() { location.reload(); }
+function resetAether() { unlocked = { grego: [], egipcio: [], nordico: [] }; location.reload(); }
 
 window.onmousemove = e => { px = e.clientX; py = e.clientY; };
 window.ontouchmove = e => { px = e.touches[0].clientX; py = e.touches[0].clientY; };
 document.getElementById('menu-btn').onclick = () => document.getElementById('side-menu').classList.toggle('active');
 
-init(); draw();
+window.onload = () => { init(); draw(); };

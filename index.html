@@ -10,17 +10,26 @@
 <body>
     <canvas id="quantum-field"></canvas>
 
+    <aside class="achievements-sidebar">
+        <div class="sidebar-header">ARCHIVE_LOG</div>
+        <div id="achievements-list" class="custom-scroll"></div>
+    </aside>
+
     <div class="interface-layer">
         <header>
-            <div class="brand">ORACLE<span>_OS</span></div>
+            <div class="brand">ORACLE<span class="pulse">_OS</span></div>
+            <div class="collection-status">
+                <span class="label">PROGRESS:</span>
+                <span id="collection-count">0 / 0</span>
+            </div>
             <div class="menu-trigger" id="menu-btn">
                 <span></span><span></span><span></span>
             </div>
         </header>
 
         <nav class="side-menu" id="side-menu">
-            <div class="menu-header">ECOSSISTEMA DIGITAL</div>
-            <ul class="menu-list">
+            <div class="menu-header">REDE_AETHER // CONEXÕES</div>
+            <ul class="menu-list custom-scroll">
                 <li><a href="https://alexxanorafa.github.io/Alquimia-dos-Sentimentos/" class="menu-item">Alquimia dos Sentimentos</a></li>
                 <li><a href="https://alexxanorafa.github.io/Almas-Conectadas/" class="menu-item">Almas Conectadas</a></li>
                 <li><a href="https://alexxanorafa.github.io/Aneis_da_Sabedoria/" class="menu-item">Anéis da Sabedoria</a></li>
@@ -64,22 +73,23 @@
         <main>
             <div id="main-ui" class="central-node">
                 <div class="status-readout">SINCRO: <span id="entropy-val">0.00%</span></div>
-                <div class="instruction">PERTURBE O CAMPO TÁTIL PARA REVELAR</div>
+                <div class="instruction">PERTURBE O CAMPO PARA MATERIALIZAR</div>
             </div>
 
             <div id="artifact-container" class="hidden">
                 <div class="artifact-card">
+                    <div class="card-header">DATA_REVEAL</div>
                     <canvas id="artifact-canvas" width="200" height="200"></canvas>
                     <div class="artifact-content">
-                        <div id="god-header" class="meta-info"></div>
+                        <div id="god-header" class="meta-tag"></div>
                         <h2 id="god-name"></h2>
                         <div class="scroll-box custom-scroll">
                             <p id="god-msg"></p>
                         </div>
                         <div id="god-shadow" class="shadow-box"></div>
                         <div class="action-bar">
-                            <button class="btn-continue" onclick="continueExploration()">CONTINUAR EXPLORAÇÃO</button>
-                            <button class="btn-reset" onclick="resetAether()">REINICIAR TUDO</button>
+                            <button onclick="continueExploration()">MANTER FLUXO</button>
+                            <button class="danger" onclick="resetAether()">REINICIAR</button>
                         </div>
                     </div>
                 </div>
@@ -87,8 +97,8 @@
         </main>
 
         <footer>
-            <div class="control-group">
-                <select id="panteao-selector">
+            <div class="footer-ctrl">
+                <select id="panteao-selector" onchange="initPanteao()">
                     <option value="grego">432Hz (OLIMPO)</option>
                     <option value="egipcio">528Hz (EGITO)</option>
                     <option value="nordico">639Hz (NÓRDICO)</option>
