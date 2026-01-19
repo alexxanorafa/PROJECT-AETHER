@@ -1,0 +1,124 @@
+:root {
+    --void: #030305;
+    --light: #e0e6ed;
+    --accent: #ff2a6d; /* Glitch Pink */
+    --energy: #05d9e8; /* Cyan Energy */
+}
+
+body {
+    margin: 0;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    background: var(--void);
+    font-family: 'Space Grotesk', sans-serif;
+    color: var(--light);
+    cursor: crosshair; /* Mira técnica */
+}
+
+/* O Campo Quântico */
+#quantum-field {
+    position: fixed;
+    top: 0; left: 0;
+    z-index: 0;
+    filter: contrast(150%) brightness(120%);
+}
+
+/* Interface Layer */
+.interface-layer {
+    position: relative;
+    z-index: 10;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 30px;
+    pointer-events: none; /* Deixa clicar no canvas */
+}
+
+header, footer, .central-node, #artifact-container button, select {
+    pointer-events: auto; /* Reativa cliques nos controlos */
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    font-family: 'Syncopate', sans-serif;
+}
+
+.central-node {
+    align-self: center;
+    text-align: center;
+    mix-blend-mode: difference; /* O texto inverte cor baseado no fundo */
+}
+
+.instruction {
+    font-size: 0.8rem;
+    opacity: 0.7;
+    margin-top: 10px;
+    letter-spacing: 2px;
+    animation: pulse 3s infinite;
+}
+
+/* O Artefato (Resultado) */
+#artifact-container {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(10, 10, 15, 0.85);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 40px;
+    border-radius: 2px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 0 50px rgba(5, 217, 232, 0.2);
+    opacity: 0;
+    transition: opacity 1s ease;
+}
+
+#artifact-container.visible { opacity: 1; pointer-events: auto; }
+#artifact-container.hidden { display: none; }
+
+#artifact-canvas {
+    width: 150px; height: 150px;
+    border-radius: 50%;
+    border: 1px solid var(--energy);
+    box-shadow: 0 0 20px var(--energy);
+}
+
+h2 {
+    font-family: 'Syncopate';
+    color: var(--energy);
+    margin: 0;
+    font-size: 2rem;
+}
+
+button {
+    background: transparent;
+    border: 1px solid var(--light);
+    color: var(--light);
+    padding: 10px 30px;
+    font-family: 'Space Grotesk';
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: 0.3s;
+}
+button:hover { background: var(--light); color: var(--void); }
+
+select {
+    background: transparent;
+    border: none;
+    color: var(--energy);
+    font-family: 'Space Grotesk';
+    outline: none;
+    text-align: right;
+    cursor: pointer;
+}
+
+@keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }

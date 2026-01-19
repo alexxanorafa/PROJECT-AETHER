@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PROJECT AETHER | Quantum Interferometer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500&family=Syncopate:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    
+    <canvas id="quantum-field"></canvas>
+
+    <div class="interface-layer">
+        <header>
+            <div class="brand">AETHER<span class="version">.sys</span></div>
+            <div class="menu-trigger" id="menu-btn">///</div>
+        </header>
+
+        <nav id="menu-hidden">
+             </nav>
+
+        <main>
+            <div class="central-node">
+                <div class="status-readout">ENTROPIA: <span id="entropy-val">0.00%</span></div>
+                <div class="instruction">PERTURBE O CAMPO PARA OBSERVAR</div>
+            </div>
+            
+            <div id="artifact-container" class="hidden">
+                <canvas id="artifact-canvas"></canvas> <div class="artifact-data">
+                    <h2 id="god-name">NOME_DIVINO</h2>
+                    <p id="god-msg">Transmissão descodificada...</p>
+                    <button onclick="resetAether()">REINICIAR SINGULARIDADE</button>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <div class="freq-visualizer" id="freq-viz"></div>
+            <select id="panteao-selector" onchange="switchFrequency()">
+                <option value="grego">FREQ: 432Hz (OLIMPO)</option>
+                <option value="egipcio">FREQ: 528Hz (EGITO)</option>
+                <option value="nordico">FREQ: 639Hz (NÓRDICO)</option>
+            </select>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
